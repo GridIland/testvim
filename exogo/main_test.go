@@ -1,48 +1,31 @@
-// main_test.go
 package main
 
 import (
 	"testing"
-	"fmt"
 )
 
-func TestMonthlyBillIncrease(t *testing.T) {
+func Test(t *testing.T) {
 	type testCase struct {
-		costPerSend,
-		numLastMonth,
-		numThisMonth,
-		expected int
+		tier     string
+		expected string
 	}
 	tests := []testCase{
-		{2, 89, 102, 26},
-		{2, 98, 104, 12},
+		{"basic", "You get 1,000 texts per month for $30 per month."},
+		{"premium", "You get 50,000 texts per month for $60 per month."},
 	}
 	if withSubmit {
 		tests = append(tests, []testCase{
-			{3, 50, 40, -30},
-			{3, 60, 60, 0},
+			{"enterprise", "You get unlimited texts per month for $100 per month."},
 		}...)
 	}
 
 	for _, test := range tests {
-		if output := monthlyBillIncrease(
-			test.costPerSend,
-			test.numLastMonth,
-			test.numThisMonth,
+		if output := getProductMessage(
+			test.tier,
 		); output != test.expected {
 			t.Errorf(
-				"Test Failed: (%v, %v, %v) -> expected: %v actual: %v",
-				test.costPerSend,
-				test.numLastMonth,
-				test.numThisMonth,
-				test.expected,
-				output,
-			)
-		} else {
-			fmt.Printf("Test Passed: (%v, %v, %v) -> expected: %v actual: %v\n",
-				test.costPerSend,
-				test.numLastMonth,
-				test.numThisMonth,
+				"Test Failed: (%v) -> expected: %v actual: %v",
+				test.tier,
 				test.expected,
 				output,
 			)
@@ -53,4 +36,3 @@ func TestMonthlyBillIncrease(t *testing.T) {
 // withSubmit is set at compile time depending
 // on which button is used to run the tests
 var withSubmit = true
-
