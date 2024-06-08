@@ -1,33 +1,54 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
 func Test(t *testing.T) {
 	type testCase struct {
-		tier     string
-		expected string
+		age                   int
+		exYearsUntilAdult     int
+		exYearsUntilDrinking  int
+		exYearsUntilCarRental int
 	}
 	tests := []testCase{
-		{"basic", "You get 1,000 texts per month for $30 per month."},
-		{"premium", "You get 50,000 texts per month for $60 per month."},
+		{4, 14, 17, 21},
+		{18, 0, 3, 7},
+		{22, 0, 0, 3},
 	}
 	if withSubmit {
 		tests = append(tests, []testCase{
-			{"enterprise", "You get unlimited texts per month for $100 per month."},
+			{25, 0, 0, 0},
+			{35, 0, 0, 0},
 		}...)
 	}
 
 	for _, test := range tests {
-		if output := getProductMessage(
-			test.tier,
-		); output != test.expected {
+		if yearsUntilAdult, yearsUntilDrinking, yearsUntilCarRental := yearsUntilEvents(
+			test.age,
+		); yearsUntilAdult != test.exYearsUntilAdult ||
+			yearsUntilDrinking != test.exYearsUntilDrinking ||
+			yearsUntilCarRental != test.exYearsUntilCarRental {
 			t.Errorf(
-				"Test Failed: (%v) -> expected: %v actual: %v",
-				test.tier,
-				test.expected,
-				output,
+				"Test Failed: (%v) -> expected: (%v, %v, %v) actual: (%v, %v, %v)",
+				test.age,
+				test.exYearsUntilAdult,
+				test.exYearsUntilDrinking,
+				test.exYearsUntilCarRental,
+				yearsUntilAdult,
+				yearsUntilDrinking,
+				yearsUntilCarRental,
+			)
+		} else {
+			fmt.Printf("Test Passed: (%v) -> expected: (%v, %v, %v) actual: (%v, %v, %v)\n",
+				test.age,
+				test.exYearsUntilAdult,
+				test.exYearsUntilDrinking,
+				test.exYearsUntilCarRental,
+				yearsUntilAdult,
+				yearsUntilDrinking,
+				yearsUntilCarRental,
 			)
 		}
 	}
@@ -36,3 +57,4 @@ func Test(t *testing.T) {
 // withSubmit is set at compile time depending
 // on which button is used to run the tests
 var withSubmit = true
+
