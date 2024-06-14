@@ -1,33 +1,66 @@
 package main
 
-import "fmt"
-
-func main (){
-  thisCost := 3
-  numness := 7421 
-  fmt.Print(calculateFinalBill(float64(thisCost),numness))
-}
-func calculateFinalBill(costpermessage float64, nummessages int) float64 {
-  baseBill := calculateBaseBill(costpermessage,nummessages)   
-  amountDeducted := baseBill * calculatediscount(nummessages)
-  fmt.Print(amountDeducted)
-  return baseBill - amountDeducted 
+func placeOrder(productID string, quantity int, accountBalance float64) (bool, float64) {
+ if quantity > amountInStock(productID) {
+   return false, accountBalance 
+ } 
+ if accountBalance < calcPrice(productID,quantity){
+   return false, accountBalance 
+ } else {
+   return true, accountBalance - calcPrice(productID,quantity)
+ } 
 }
 
-func calculatediscount(messagessent int) float64 {
-  if messagessent >1000 && messagessent<5000{
-    return .1
-  }
-  if messagessent >5000{
-    return .2
-  }else{
-    return 0.0
-  }
+// Don't touch below this line
+
+func calcPrice(productID string, quantity int) float64 {
+	return priceList(productID) * float64(quantity)
 }
 
-// don't touch below this line
-
-func calculateBaseBill(costPerMessage float64, messagesSent int) float64 {
-  return costPerMessage * float64(messagesSent)
+func priceList(productID string) float64 {
+	if productID == "1" {
+		return 1.50
+	} else if productID == "2" {
+		return 2.25
+	} else if productID == "3" {
+		return 3.00
+	} else if productID == "4" {
+		return 1.00
+	} else if productID == "5" {
+		return 2.50
+	} else if productID == "6" {
+		return 8.99
+	} else if productID == "7" {
+		return 22.50
+	} else if productID == "8" {
+		return 50.00
+	} else if productID == "9" {
+		return 999.99
+	} else {
+		return 0.00
+	}
 }
 
+func amountInStock(productID string) int {
+	if productID == "1" {
+		return 11
+	} else if productID == "2" {
+		return 25
+	} else if productID == "3" {
+		return 4
+	} else if productID == "4" {
+		return 6
+	} else if productID == "5" {
+		return 50
+	} else if productID == "6" {
+		return 2
+	} else if productID == "7" {
+		return 0
+	} else if productID == "8" {
+		return 99
+	} else if productID == "9" {
+		return 1
+	} else {
+		return 0
+	}
+}
