@@ -6,7 +6,7 @@ func main (){
   subscription := "enterprise"
   fmt.Println(getMonthlyPrice(subscription))
 }
-
+// this is just the begining 
 func getMonthlyPrice (tier string) int {
   if tier == "basic"{
     return 10000

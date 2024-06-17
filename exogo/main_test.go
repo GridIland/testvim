@@ -59,4 +59,4 @@ func Test(t *testing.T) {
 	}
 }
 
-var withSubmit = false
+var withSubmit = true
