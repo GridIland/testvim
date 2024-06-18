@@ -7,56 +7,55 @@ import (
 
 func Test(t *testing.T) {
 	type testCase struct {
-		productID      string
-		quantity       int
-		accountBalance float64
-		expected_1     bool
-		expected_2     float64
+		mToSend  messageToSend
+		expected bool
 	}
 	tests := []testCase{
-		{"1", 2, 226.95, true, 223.95},
-		{"2", 4, 459, true, 450},
-		{"3", 4, 1185.2, true, 1173.2},
-		{"4", 5, 0, false, 0},
-		{"5", 50, 195, true, 70},
+		{messageToSend{
+			message:   "you have an appointment tomorrow",
+			sender:    user{name: "Brenda Halafax", number: 16545550987},
+			recipient: user{name: "Sally Sue", number: 19035558973},
+		}, true},
+		{messageToSend{
+			message:   "you have an event tomorrow",
+			sender:    user{number: 16545550987},
+			recipient: user{name: "Suzie Sall", number: 19035558973},
+		}, false},
 	}
 	if withSubmit {
 		tests = append(tests, []testCase{
-			{"6", 0, 100, true, 100},
-			{"7", 7421, 210.24, false, 210.24},
-			{"8", 55, 24.5, false, 24.5},
-			{"9", 1, 999.99, true, 0},
+			{messageToSend{
+				message:   "you have an birthday tomorrow",
+				sender:    user{name: "Jason Bjorn", number: 16545550987},
+				recipient: user{name: "Jim Bond"},
+			}, false},
+			{messageToSend{
+				message:   "you have a party tomorrow",
+				sender:    user{name: "Njorn Halafax"},
+				recipient: user{name: "Becky Sue", number: 19035558973},
+			}, false},
+			{messageToSend{
+				message:   "you have a birthday tomorrow",
+				sender:    user{name: "Eli Halafax", number: 16545550987},
+				recipient: user{number: 19035558973},
+			}, false},
 		}...)
 	}
 
 	for _, test := range tests {
-		if output_1, output_2 := placeOrder(
-			test.productID,
-			test.quantity,
-			test.accountBalance,
-		); output_1 != test.expected_1 || output_2 != test.expected_2 {
+		if output := canSendMessage(test.mToSend); output != test.expected {
 			t.Errorf(
-				"Test Failed: (%v, %v, %v) -> expected: (%v, %v) actual: (%v, %v)\n",
-				test.productID,
-				test.quantity,
-				test.accountBalance,
-				test.expected_1,
-				test.expected_2,
-				output_1,
-				output_2,
+				"Test Failed: (%+v) -> expected: %v actual: %v",
+				test.mToSend,
+				test.expected,
+				output,
 			)
 		} else {
-			fmt.Printf("Test Passed: (%v, %v, %v) -> expected: (%v, %v) actual: (%v, %v)\n",
-				test.productID,
-				test.quantity,
-				test.accountBalance,
-				test.expected_1,
-				test.expected_2,
-				output_1,
-				output_2,
-			)
+			fmt.Printf("Test Passed: (%+v) -> expected: %v actual: %v\n", test.mToSend, test.expected, output)
 		}
 	}
 }
 
+// withSubmit is set at compile time depending
+// on which button is used to run the tests
 var withSubmit = true
