@@ -1,23 +1,13 @@
 package main
 
-type messageToSend struct {
-	message   string
-	sender    user
-	recipient user
+import "fmt"
+
+type authenticationInfo struct {
+	username string
+	password string
 }
 
-type user struct {
-	name   string
-	number int
+// create the method below
+func (auth authenticationInfo) getBasicAuth() string {
+  return fmt.Sprintf("Authorization: Basic %s:%s",auth.username,auth.password)
 }
-
-func canSendMessage(mToSend messageToSend) bool {
-	if mToSend.sender.name ==""|| mToSend.sender.number == 0{
-    return false
-  }
-  if mToSend.recipient.name == "" || mToSend.recipient.number == 0{
-    return false
-  }
-	return true
-}
-
