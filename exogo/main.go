@@ -1,13 +1,43 @@
 package main
 
-import "fmt"
+type membershipType string
 
-type authenticationInfo struct {
-	username string
-	password string
+const (
+	TypeStandard membershipType = "standard"
+	TypePremium  membershipType = "premium"
+)
+
+// don't touch above this line
+
+type Membership struct{
+  Type membershipType
+  MessageCharLimit int
 }
 
-// create the method below
-func (auth authenticationInfo) getBasicAuth() string {
-  return fmt.Sprintf("Authorization: Basic %s:%s",auth.username,auth.password)
+type User struct {
+	Name string
+  Membership
 }
+
+func newUser(name string, membershipType membershipType) User {
+  if membershipType == TypePremium{
+    return User{
+      Name : name,
+      Membership : Membership{
+        Type : membershipType,
+        MessageCharLimit : 1000,
+      },
+    }
+  }else {
+    return User{
+      Name : name,
+      Membership : Membership{
+        Type : membershipType,
+        MessageCharLimit : 100,
+      },
+    }
+  }
+  
+  
+}
+
