@@ -1,16 +1,12 @@
 package main
 
-func getMonthlyPrice(tier string) int {
-	dollarinpenny := 100
-	if tier == "basic" {
-		return 100 * dollarinpenny
-	}
-	if tier == "premium" {
-		return 150 * dollarinpenny
-	}
-	if tier == "enterprise" {
-		return 500 * dollarinpenny
-	}
-	return 0
+func monthlyBillIncrease(costPerSend, numLastMonth, numThisMonth int) int {
+  lastMonthBill:= getBillForMonth( costPerSend, numLastMonth)
+  thisMonthBill:= getBillForMonth( costPerSend, numThisMonth)
+	return thisMonthBill - lastMonthBill
+}
+
+func getBillForMonth(costPerSend, messagesSent int)int {
+	return costPerSend * messagesSent
 }
 
