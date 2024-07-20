@@ -7,49 +7,55 @@ import (
 
 func Test(t *testing.T) {
 	type testCase struct {
-		costPerSend,
-		numLastMonth,
-		numThisMonth,
-		expected int
+		message       string
+		formatter     func(string) string
+		formatterName string
+		expected      string
 	}
 	tests := []testCase{
-		{2, 89, 102, 26},
-		{2, 98, 104, 12},
+		{"hello", addExclamation, "addExclamation", "TEXTIO: hello!!!"},
+		{"hello there", addPeriod, "addPeriod", "TEXTIO: hello there..."},
 	}
 	if withSubmit {
 		tests = append(tests, []testCase{
-			{3, 50, 40, -30},
-			{3, 60, 60, 0},
+			{"moor der ehT", reverseString, "reverseString", "TEXTIO: The red room"},
 		}...)
 	}
 
 	for _, test := range tests {
-		if output := monthlyBillIncrease(
-			test.costPerSend,
-			test.numLastMonth,
-			test.numThisMonth,
-		); output != test.expected {
-			t.Errorf(
-				"Test Failed: (%v, %v, %v) -> expected: %v actual: %v",
-				test.costPerSend,
-				test.numLastMonth,
-				test.numThisMonth,
-				test.expected,
-				output,
-			)
+		if output := reformat(test.message, test.formatter); output != test.expected {
+			t.Errorf(`Test Failed: (%v, %v) =>
+  expected: %v
+  got: %v
+`,
+				test.message, test.formatterName, test.expected, output)
 		} else {
-			fmt.Printf("Test Passed: (%v, %v, %v) -> expected: %v actual: %v\n",
-				test.costPerSend,
-				test.numLastMonth,
-				test.numThisMonth,
-				test.expected,
-				output,
-			)
+			fmt.Printf(`Test Passed: (%v, %v) =>
+  expected: %v
+  got: %v
+`,
+				test.message, test.formatterName, test.expected, output)
 		}
+		fmt.Println("==============================")
 	}
+}
+
+func addPeriod(s string) string {
+	return s + "."
+}
+
+func addExclamation(s string) string {
+	return s + "!"
+}
+
+func reverseString(s string) string {
+	r := []rune(s)
+	for i, j := 0, len(r)-1; i < j; i, j = i+1, j-1 {
+		r[i], r[j] = r[j], r[i]
+	}
+	return string(r)
 }
 
 // withSubmit is set at compile time depending
 // on which button is used to run the tests
 var withSubmit = true
-

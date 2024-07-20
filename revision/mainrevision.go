@@ -1,12 +1,5 @@
 package main
 
-func monthlyBillIncrease(costPerSend, numLastMonth, numThisMonth int) int {
-  lastMonthBill:= getBillForMonth( costPerSend, numLastMonth)
-  thisMonthBill:= getBillForMonth( costPerSend, numThisMonth)
-	return thisMonthBill - lastMonthBill
+func reformat(message string, formatter func(string) string) string {
+  return "TEXTIO: "+formatter(formatter(formatter(message)))
 }
-
-func getBillForMonth(costPerSend, messagesSent int)int {
-	return costPerSend * messagesSent
-}
-
