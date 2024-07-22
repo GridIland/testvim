@@ -2,74 +2,58 @@ package main
 
 import (
 	"fmt"
-	"slices"
 	"testing"
 )
 
+func getMessageText(m messageToSend) string {
+	return fmt.Sprintf("Sending message: '%s' to: %v", m.message, m.phoneNumber)
+}
+
 func Test(t *testing.T) {
 	type testCase struct {
-		input    []int
-		expected []int
+		phoneNumber int
+		message     string
+		expected    string
 	}
 	tests := []testCase{
-		{
-			input:    []int{1, 2, 3},
-			expected: []int{1, 3, 6},
-		},
-		{
-			input:    []int{1, 2, 3, 4, 5},
-			expected: []int{1, 3, 6, 10, 15},
-		},
+		{148255510981, "Thanks for signing up", "Sending message: 'Thanks for signing up' to: 148255510981"},
+		{148255510982, "Love to have you aboard!", "Sending message: 'Love to have you aboard!' to: 148255510982"},
 	}
-
 	if withSubmit {
 		tests = append(tests, []testCase{
-			{
-				input:    []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-				expected: []int{1, 3, 6, 10, 15, 21, 28, 36, 45, 55},
-			},
-			{
-				input:    []int{0, 0, 0, 0},
-				expected: []int{0, 0, 0, 0},
-			},
-			{
-				input:    []int{5, -3, -1},
-				expected: []int{5, 2, 1},
-			},
+			{148255510983, "We're so excited to have you", "Sending message: 'We're so excited to have you' to: 148255510983"},
+			{148255510984, "", "Sending message: '' to: 148255510984"},
+			{148255510985, "Hello, World!", "Sending message: 'Hello, World!' to: 148255510985"},
 		}...)
 	}
 
 	for _, test := range tests {
-		f := adder()
-		results := make([]int, len(test.input))
-		for i, v := range test.input {
-			results[i] = f(v)
-		}
-		if !slices.Equal(results, test.expected) {
-			t.Errorf(`
-Test Failed.
-  input: %v
-->
+		if output := getMessageText(messageToSend{
+			phoneNumber: test.phoneNumber,
+			message:     test.message,
+		}); output != test.expected {
+			t.Errorf(
+				`Test Failed: (%v, %v) ->
   expected: %v
   actual: %v
 `,
-				test.input,
+				test.phoneNumber,
+				test.message,
 				test.expected,
-				results,
+				output,
 			)
 		} else {
-			fmt.Printf(`
-Test Passed.
-  input: %v
-->
+			fmt.Printf(`Test Passed: (%v, %v) ->
   expected: %v
   actual: %v
-			`,
-				test.input,
+`,
+				test.phoneNumber,
+				test.message,
 				test.expected,
-				results,
+				output,
 			)
 		}
+		fmt.Println("================================")
 	}
 }
 
