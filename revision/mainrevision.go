@@ -1,32 +1,22 @@
 package main
 
-import "fmt"
+func calculateFinalBill(costPerMessage float64, numMessages int) float64 {
+  return calculateBaseBill(costPerMessage, numMessages) - calculateBaseBill(costPerMessage, numMessages)*calculateDiscount(numMessages)
+}
 
-func printReports(intro, body, outro string) {
-  printCostReport(func(s string) int {
-    return len(s)*2
-  },intro)
-  printCostReport(func(s string) int {
-    return len(s)*3
-  },body)
-  printCostReport(func(s string) int {
-    return len(s)*4
-  },outro)
+func calculateDiscount(messagesSent int) float64 {
+  if messagesSent > 5000{
+    return .2
+  }
+  if messagesSent > 1000{
+    return .1
+  }
+  return 0
 }
 
 // don't touch below this line
 
-func main() {
-	printReports(
-		"Welcome to the Hotel California",
-		"Such a lovely place",
-		"Plenty of room at the Hotel California",
-	)
-}
-
-func printCostReport(costCalculator func(string) int, message string) {
-	cost := costCalculator(message)
-	fmt.Printf(`Message: "%s" Cost: %v cents`, message, cost)
-	fmt.Println()
+func calculateBaseBill(costPerMessage float64, messagesSent int) float64 {
+	return costPerMessage * float64(messagesSent)
 }
 
